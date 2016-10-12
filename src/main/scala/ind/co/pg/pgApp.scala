@@ -1,19 +1,19 @@
-import java.lang.System._
+package ind.co.pg
+
 import java.util.concurrent.TimeUnit._
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Await
 import scala.concurrent.duration.FiniteDuration
+
 /**
   * Created by LENOVO PC on 10-10-2016.
   */
-object pgApp extends App {
+object pgApp extends App with RestService{
   implicit val system = ActorSystem("bridge-actors")
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
@@ -26,7 +26,7 @@ object pgApp extends App {
   val serverPort = 8080
 
 
-  lazy val route: Route = {
+  /*lazy val route: Route = {
     extractClientIP { ip =>
       logger.info(lineSeparator())
       logger.info("******************************************")
@@ -39,11 +39,22 @@ object pgApp extends App {
           path("license") {
             complete("License :  L123")
           }
+      }~
+      path("purchase") {
+        post {
+          entity(as[Customer]) {
+            customer => complete {
+              logger.info(s"got customer with name ${customer.name}")
+              s"got customer with name ${customer.name}"
+            }
+          }
+        }
       }
-    }
-  }
 
-  Http().bindAndHandle(pgApp.route, "localhost", serverPort)
+    }
+  }*/
+
+  Http().bindAndHandle(purchaseRoute, "localhost", serverPort)
 
   logger.info("... started on port {}", serverPort)
 

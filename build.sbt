@@ -13,3 +13,7 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.21",
   "ch.qos.logback" % "logback-classic" % "1.1.7" % "runtime")
 
+  libraryDependencies ++= Seq(
+    "com.typesafe.akka" % "akka-http-testkit-experimental_2.11" % "2.0.5",
+    "org.scalatest" %% "scalatest" % "2.2.6" % "test" )
+
