@@ -8,7 +8,8 @@ import akka.http.scaladsl.server._
 import akka.stream.ActorMaterializer
 import org.slf4j.LoggerFactory
 import ind.co.pg.Models.{Customer}
-import akka.http.scaladsl.marshalling.ToResponseMarshallable
+import spray.json.DefaultJsonProtocol._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
 /**
   * Created by Admin on 12-10-2016.
@@ -36,7 +37,7 @@ trait RestService {
     }
   }
 
-  import ind.co.pg.Models.ServiceJsonProtoocol.customerProtocol._
+  import ind.co.pg.Models.ServiceJsonProtoocol.customerProtocol
   lazy val purchaseRoute: Route = {
     extractClientIP { ip =>
       logger.info(lineSeparator())
