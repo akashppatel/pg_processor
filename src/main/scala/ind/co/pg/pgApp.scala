@@ -64,4 +64,5 @@ object pgApp extends App with RestService{
     Await.result(system.whenTerminated, new FiniteDuration(30, SECONDS))
     logger.info("ActorSystem shutdown")
   }
+
 }
