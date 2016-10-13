@@ -2,6 +2,7 @@ package ind.co.pg
 
 import java.lang.System._
 
+import _root_.util.AppUtil
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.model.StatusCodes._
@@ -57,7 +58,7 @@ trait RestService {
         path("purchase") {
             entity(as[Customer]) {
 
-              customer => prosessCustomer(customer)
+              customer => handlePurchase(customer)
             }
         }
       }
@@ -65,28 +66,34 @@ trait RestService {
     }
   }
 
+
+
   def authinticateUser(customer: Customer): Future[Boolean] = {
     /*
+
     1) Verify the customer.
      */
 
     // create a Future
     val f = Future {
-      sleep(500)
+      AppUtil.sleep(500)
       true
     }
     f
   }
 
-  def handleSuccessHttpResponseFromXchange(xchangeHttpResponse: HttpResponse, customer: Customer): Route = {
-
+  def handleSuccessHttpResponseFromXchange(xchangeHttpResponse: Boolean/*HttpResponse*/, customer: Customer): Route = {
+    complete {
+      logger.info(s"got customer's payment response : ${customer.name}")
+      s"${customer.name} Thankyou for shopping."
+    }
   }
 
   def handlePurchase(customer : Customer): server.Route = {
 
     onComplete(authinticateUser(customer)) {
       case Success(xchangeHttpResponse) =>
-        handleSuccessHttpResponseFromXchange(xchangeHttpResponse, customer)
+        handleSuccessHttpResponseFromXchange(xchangeHttpResponse,customer)//(xchangeHttpResponse, customer)
       case Failure(ex) =>
         logger.error(ex.getMessage, ex)
         complete(HttpResponse(status = InternalServerError, entity = s"Error fetching license: ${ex.getMessage}"))
