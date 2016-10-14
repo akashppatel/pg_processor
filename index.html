@@ -1,0 +1,17 @@
+<!doctype html>
+<html >
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="app.js" ></script>
+</head>
+<body ng-app="app" ng-controller="mainCtrl as main">
+<div>
+    <label>Name:</label>
+    <input type="text" ng-model="main.user.name" placeholder="Enter a name here">
+    <hr>
+    <h1>Hello {{main.user.name}}!</h1>
+    <button ng-click="main.purchase(main.user)" >Purchase</button>
+    <div> PG response : {{main.pgResponse}}</div>
+</div>
+</body>
+</html>
