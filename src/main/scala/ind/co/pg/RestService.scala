@@ -84,8 +84,9 @@ trait RestService {
 
   def handleSuccessHttpResponseFromXchange(xchangeHttpResponse: Boolean/*HttpResponse*/, customer: Customer): Route = {
     complete {
-      logger.info(s"got customer's payment response : ${customer.name}")
-      s"${customer.name} Thankyou for shopping."
+      logger.info(s"got customer's payment response : customerName")
+      val customerName = AppUtil.capitalStartingLetterOfEachWord(customer.name);
+      s"${customerName} Thankyou for shopping."
     }
   }
 
