@@ -12,4 +12,14 @@ object AppUtil {
   def capitalStartingLetterOfEachWord(input : String) : String = {
     input.toLowerCase.split(' ').map(_.capitalize).mkString(" ")
   }
+
+  /**
+    * to show string option value
+    * @param x
+    * @return
+    */
+  def showStringOption(x: Option[String]) = x match {
+    case Some(s) => s
+    case None => "?"
+  }
 }
