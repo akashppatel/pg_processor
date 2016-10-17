@@ -1,6 +1,6 @@
 angular.module('app', [])
 
-    .constant('apiUriPrefix', '/')
+    .constant('apiUriPrefix', '/pg-api')
 
     .controller('mainCtrl', function ($http, $interval, apiUriPrefix) {
 
@@ -11,7 +11,7 @@ angular.module('app', [])
         self.purchase = function (user) {
                     console.log('purchasing ...... ' + user.name);
 
-                    $http.post(apiUriPrefix + 'purchase', user).then(
+                    $http.post(apiUriPrefix + '/purchase', user).then(
                         function (response) {
                             console.log('In app.js -> purchasing : ' + response);
                             self.pgResponse = response.data;

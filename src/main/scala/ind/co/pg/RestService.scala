@@ -55,14 +55,15 @@ trait RestService {
       logger.info(s"Request from $ip")
 
       post {
-        path("purchase") {
-            entity(as[Customer]) {
+          pathPrefix("pg-api"){
+            path("purchase") {
+              entity(as[Customer]) {
 
-              customer => handleClientSpecificPurchase(customer)
+                customer => handleClientSpecificPurchase(customer)
+              }
             }
         }
       }
-
     }
   }
 
@@ -98,7 +99,7 @@ trait RestService {
     //Http().singleRequest(clientPgRequest)
     // create a Future
     val f = Future {
-      AppUtil.sleep(500)
+      //AppUtil.sleep(500)
       true
     }
     f
