@@ -2,7 +2,7 @@ package ind.co.pg
 
 import java.lang.System._
 
-import _root_.util.AppUtil
+import _root_.util.{AuthUtil, AppUtil}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
@@ -48,7 +48,7 @@ trait RestService {
   }
 
   import ind.co.pg.Models.ServiceJsonProtoocol.customerProtocol
-  lazy val purchaseRoute: Route = {
+  lazy val purchaseRoute: Route =  Route.seal {
     extractClientIP { ip =>
       logger.info(lineSeparator())
       logger.info("******************************************")
@@ -60,6 +60,11 @@ trait RestService {
               entity(as[Customer]) {
 
                 customer => handleClientSpecificPurchase(customer)
+              }
+            }~
+            path("secured") {
+              authenticateBasic(realm = "secure site", AuthUtil.myUserPassAuthenticator) { userName =>
+                complete(s"The user is '$userName'")
               }
             }
         }
@@ -94,13 +99,13 @@ trait RestService {
     * @param clientPgRequest
     * @return
     */
-  def handleClientTransactionWithPg(customer : Customer, pgHandler : PgHandler, clientPgRequest : HttpRequest) : Future[Boolean/*HttpResponse*/] = {
+  def handleClientTransactionWithPg(customer : Customer, pgHandler : PgHandler, clientPgRequest : HttpRequest) : Future[HttpResponse] = {
     logger.info(s"Calling PG in progress .................. ")
     //Http().singleRequest(clientPgRequest)
     // create a Future
     val f = Future {
       //AppUtil.sleep(500)
-      true
+      HttpResponse(200)
     }
     f
   }
@@ -111,12 +116,13 @@ trait RestService {
     * @param customer
     * @return
     */
-  def handleSuccessHttpResponseFromPg(pgHttpResponse: Boolean/* HttpResponse*/, customer: Customer): Route = {
+  def handleSuccessHttpResponseFromPg(pgHttpResponse:  HttpResponse, customer: Customer): Route = {
     complete {
       val customerName = AppUtil.capitalStartingLetterOfEachWord(customer.name);
       logger.info(s"got customer's payment response : ${customer.name}")
       logger.info("******************************************")
       s"${customerName} Thankyou for shopping."
+      HttpResponse(200, entity = s"${customerName} Thankyou for shopping.")
     }
   }
 
